@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   GptMessage,
   MyMessage,
@@ -14,6 +14,15 @@ interface Message {
 export const OrthographyPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handlePost = async (text: string) => {
     setIsLoading(true);
@@ -46,6 +55,7 @@ export const OrthographyPage = () => {
               <TypingLoader />
             </div>
           )}
+          <div ref={messagesEndRef} />
         </div>
       </div>
 
