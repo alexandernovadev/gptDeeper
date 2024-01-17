@@ -18,3 +18,5 @@ export const GptMessage = ({ text }: Props) => {
     </div>
   );
 };
+
+
