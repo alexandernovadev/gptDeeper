@@ -1,1 +1,2 @@
-export * from "./OrthographyResponse";
+export * from "./orthographyResponse";
+export * from "./proConsResponse";
