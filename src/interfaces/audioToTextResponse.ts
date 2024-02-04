@@ -1,4 +1,3 @@
-
 export interface AudioToTextResponse {
   task: string;
   language: string;
