@@ -1,42 +1,42 @@
 import { useState } from "react";
-import {
-  GptMessage,
-  MyMessage,
-  TypingLoader,
-  TextMessageBoxSelect,
-} from "../../components";
-import { translateUseCase } from "../../../core/use-cases/translateUseCase";
+import { GptMessage, MyMessage, TypingLoader, TextMessageBoxSelect } from '../../components';
+import { translateTextUseCase } from '../../../core/use-cases';
 
 interface Message {
   text: string;
   isGpt: boolean;
 }
 
-export interface Option {
-  id: string;
-  text: string;
-}
-const options: Option[] = [
-  { id: "Spanish", text: "Spanish" },
-  { id: "English", text: "English" },
-  { id: "Portugues", text: "Portugues" },
+const languages = [
+  { id: "alemán", text: "Alemán" },
+  { id: "árabe", text: "Árabe" },
+  { id: "bengalí", text: "Bengalí" },
+  { id: "francés", text: "Francés" },
+  { id: "hindi", text: "Hindi" },
+  { id: "inglés", text: "Inglés" },
+  { id: "japonés", text: "Japonés" },
+  { id: "mandarín", text: "Mandarín" },
+  { id: "portugués", text: "Portugués" },
+  { id: "ruso", text: "Ruso" },
 ];
 
 export const TranslatePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
 
-  const handlePost = async (text: string, lang = 'english') => {
+  const handlePost = async (text: string, selectedOption: string) => {
     setIsLoading(true);
-    setMessages((prev) => [...prev, { text: text, isGpt: false }]);
 
-    const { ok, content } = await translateUseCase(text, lang);
+    const newMessage = `Traduce: "${ text }" al idioma ${ selectedOption }`
+    setMessages((prev) => [...prev, { text: newMessage, isGpt: false }]);
 
-    if (!ok) return;
-
-    setMessages((prev) => [...prev, { text: content!, isGpt: true }]);
-
+    const { ok, message } = await translateTextUseCase( text, selectedOption )
     setIsLoading(false);
+    if ( !ok ) {
+      return alert(message);
+    }
+
+    setMessages((prev) => [...prev, { text: message, isGpt: true }]);
   };
 
   return (
@@ -44,11 +44,11 @@ export const TranslatePage = () => {
       <div className="chat-messages">
         <div className="grid grid-cols-12 gap-y-2">
           {/* Bienvenida */}
-          <GptMessage text="Hola, I'm a experta translator, what do you need translate ?" />
+          <GptMessage text="¿Qué quieres que traduzca hoy?" />
 
           {messages.map((message, index) =>
             message.isGpt ? (
-              <GptMessage key={index} text={message.text} />
+              <GptMessage key={index} text={ message.text } />
             ) : (
               <MyMessage key={index} text={message.text} />
             )
@@ -63,10 +63,9 @@ export const TranslatePage = () => {
       </div>
 
       <TextMessageBoxSelect
-        onSendMessage={(textuser, languser) => handlePost(textuser, languser)}
-        placeholder="Select Language"
-        options={options}
-        disableCorrections
+        onSendMessage={handlePost}
+        placeholder="Escribe aquí lo que deseas"
+        options={ languages }
       />
     </div>
   );

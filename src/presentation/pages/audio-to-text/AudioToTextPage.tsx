@@ -1,49 +1,61 @@
-import { useState } from "react";
-import {
-  GptMessage,
-  MyMessage,
-  TypingLoader,
-  TextMessageBoxFile,
-} from "../../components";
-import { audioToTextUseCase } from "../../../core/use-cases/audio-to-text.use-case";
+import { useState } from 'react';
+import { GptMessage, MyMessage, TypingLoader, TextMessageBoxFile } from '../../components';
+import { audioToTextUseCase } from '../../../core/use-cases';
 
 interface Message {
   text: string;
   isGpt: boolean;
 }
 
-export const AudioToTextPage = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
 
-  const handlePost = async (text: string, audioFile: File) => {
+export const AudioToTextPage = () => {
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([])
+
+
+  const handlePost = async( text: string, audioFile: File ) => {
+
     setIsLoading(true);
-    setMessages((prev) => [...prev, { text: text, isGpt: false }]);
+    setMessages( (prev) => [...prev, { text: text, isGpt: false }] );
 
     //TODO: UseCase
     const resp = await audioToTextUseCase(audioFile, text);
     setIsLoading(false);
 
-    if (!resp) return; // no hay respuesta...
+    if ( !resp ) return; // no hay respuesta...
 
     const gptMessage = `
 ## Transcripción:
-__Duración:__ ${Math.round(resp.duration)} segundos
+__Duración:__ ${ Math.round( resp.duration )  } segundos
 ## El texto es:
-${resp.text}
-`;
+${ resp.text }
+`
 
-    setMessages((prev) => [...prev, { text: gptMessage, isGpt: true }]);
 
-    for (const segment of resp.segments) {
+    setMessages( (prev) => [
+      ...prev,
+      { text: gptMessage, isGpt: true }
+    ]);
+
+    for( const segment of resp.segments ) {
       const segmentMessage = `
-__De ${Math.round(segment.start)} a ${Math.round(segment.end)} segundos:__
-${segment.text}
-`;
+__De ${ Math.round( segment.start ) } a ${ Math.round( segment.end ) } segundos:__
+${ segment.text }
+`
 
-      setMessages((prev) => [...prev, { text: segmentMessage, isGpt: true }]);
+      setMessages( (prev) => [
+        ...prev,
+        { text: segmentMessage, isGpt: true }
+      ]);
     }
-  };
+    
+    
+
+
+  }
+
+
 
   return (
     <div className="chat-container">
@@ -52,33 +64,40 @@ ${segment.text}
           {/* Bienvenida */}
           <GptMessage text="Hola, ¿qué audio quieres generar hoy?" />
 
-          {messages.map((message, index) =>
-            message.isGpt ? (
-              <GptMessage key={index} text={message.text} />
-            ) : (
-              <MyMessage
-                key={index}
-                text={
-                  message.text === "" ? "Transcribe el audio" : message.text
-                }
-              />
-            )
-          )}
+          {
+            messages.map( (message, index) => (
+              message.isGpt
+                ? (
+                  <GptMessage key={ index } text={ message.text } />
+                )
+                : (
+                  <MyMessage key={ index } text={ (message.text === '')?'Transcribe el audio': message.text } />
+                )
+                
+            ))
+          }
 
-          {isLoading && (
-            <div className="col-start-1 col-end-12 fade-in">
-              <TypingLoader />
-            </div>
-          )}
+          
+          {
+            isLoading && (
+              <div className="col-start-1 col-end-12 fade-in">
+                <TypingLoader />
+              </div>
+            )
+          }
+          
+
         </div>
       </div>
 
+
       <TextMessageBoxFile
-        onSendMessage={handlePost}
-        placeholder="Escribe aquí lo que deseas"
+        onSendMessage={ handlePost }
+        placeholder='Escribe aquí lo que deseas'
         disableCorrections
         accept="audio/*"
       />
+
     </div>
   );
 };

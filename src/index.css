@@ -2,43 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
+html, body {
   background-color: #000000;
   color: white;
   font-family: 'Open Sans', sans-serif;
-
+  
 }
 
 
 h1 {
-  @apply text-4xl font-bold mb-4 text-indigo-600;
+  @apply text-3xl font-bold mb-4;
 }
-
-h2 {
-  @apply text-3xl font-bold mb-4 text-indigo-500;
-}
-
-h3 {
-  @apply text-2xl font-bold mb-4 my-2 text-indigo-400;
-}
-
-
-h4 {
-  @apply text-xl font-bold mb-4 my-2 text-indigo-400;
-}
-
 
 p {
   @apply mb-4;
 }
 
 ul {
-  @apply list-disc list-inside my-3;
+  @apply list-disc list-inside;
 }
 
 strong {
-  @apply font-bold text-indigo-400;
+  @apply font-bold text-indigo-400 text-xl;
 }
 
 em {
@@ -65,16 +50,9 @@ em {
 
 /* Animations */
 
-.fade-in {
-  animation: fadeIn .3s;
-}
+.fade-in { animation: fadeIn .3s; }
 
 @keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }

@@ -3,6 +3,7 @@ import {
   GptMessage,
   MyMessage,
   TypingLoader,
+  TextMessageBox,
   TextMessageBoxSelect,
   GptMessageAudio,
 } from "../../components";

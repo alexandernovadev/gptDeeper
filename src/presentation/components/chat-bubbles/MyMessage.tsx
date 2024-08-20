@@ -10,7 +10,7 @@ export const MyMessage = ({ text }: Props) => {
           F
         </div>
         <div className="relative mr-3 text-sm bg-indigo-700 py-2 px-4 shadow rounded-xl">
-          <div>{text}</div>
+          <div>{ text }</div>
         </div>
       </div>
     </div>
