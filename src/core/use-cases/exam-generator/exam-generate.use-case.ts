@@ -8,10 +8,10 @@ interface ExamRequestData {
   ammountQuestions: number;
 }
 
-export const examGenerateUseCase = async (
+export async function* examGenerateUseCase(
   data: ExamRequestData,
   abortSignal: AbortSignal
-) => {
+) {
   try {
     const resp = await fetch(
       `${import.meta.env.VITE_GPT_API}/learnlang/generate-exam`,
@@ -21,7 +21,7 @@ export const examGenerateUseCase = async (
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
-        signal: abortSignal, // Añadido para manejar la posibilidad de cancelar la solicitud
+        signal: abortSignal,
       }
     );
 
@@ -30,12 +30,10 @@ export const examGenerateUseCase = async (
     const reader = resp.body?.getReader();
     if (!reader) {
       console.log("No se pudo generar el reader");
-      return null;
+      return;
     }
 
     const decoder = new TextDecoder();
-    let text = "";
-    let isFirstChunk = true;
 
     while (true) {
       const { value, done } = await reader.read();
@@ -43,27 +41,17 @@ export const examGenerateUseCase = async (
         break;
       }
 
-      const decodedChunk = decoder.decode(value, { stream: true });
-      text += decodedChunk;
+      const chunk = decoder.decode(value, { stream: true });
 
-      if (isFirstChunk) {
-        isFirstChunk = false;
-        console.log("Primer chunk recibido:", decodedChunk);
-      }
+      // Utiliza yield para enviar cada chunk al componente
+      yield chunk;
     }
-
-    const examData = JSON.parse(text) as ExamResponse;
-
-    return {
-      ok: true,
-      ...examData,
-    };
   } catch (error) {
     console.error("Error al generar el examen:", error);
-    return {
+    yield JSON.stringify({
       ok: false,
       errors: [],
       message: "No se pudo generar el examen",
-    };
+    });
   }
-};
+}
