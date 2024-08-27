@@ -6,3 +6,4 @@ export * from "./translate.response";
 export * from "./learner/exam";
 export * from "./learner/question";
 export * from "./learner/validations";
+export * from "./exam.response";
