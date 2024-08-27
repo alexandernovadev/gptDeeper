@@ -32,12 +32,12 @@ export const TextMessageBoxFile = ({
   return (
     <form
       onSubmit={handleSendMessage}
-      className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4"
+      className="flex flex-row items-center h-16 rounded-xl bg-transparent w-full px-4"
     >
       <div className="mr-3">
         <button
           type="button"
-          className="flex items-center justify-center text-gray-400 hover:text-gray-600"
+          className="flex items-center justify-center text-white bg-transparent hover:text-gray-600"
           onClick={() => inputFileRef.current?.click()}
         >
           <i className="fa-solid fa-paperclip text-xl"></i>
@@ -58,7 +58,7 @@ export const TextMessageBoxFile = ({
             type="text"
             autoFocus
             name="message"
-            className="flex w-full border rounded-xl text-gray-800 focus:outline-none focus:border-indigo-300 pl-4 h-10"
+            className="flex w-full border rounded-xl text-gray-200  bg-transparent focus:outline-none focus:border-indigo-300 pl-4 h-10"
             placeholder={placeholder}
             autoComplete={disableCorrections ? "on" : "off"}
             autoCorrect={disableCorrections ? "on" : "off"}

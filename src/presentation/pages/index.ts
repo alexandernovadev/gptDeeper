@@ -6,4 +6,5 @@ export * from "./orthography/OrthographyPage";
 export * from "./pros-cons/ProsConsPage";
 export * from "./pros-cons-stream/ProsConsStreamPage";
 export * from "./text-to-audio/TextToAudioPage";
+export * from "./exam-generator/ExamGeneratorPage";
 export * from "./translate/TranslatePage";

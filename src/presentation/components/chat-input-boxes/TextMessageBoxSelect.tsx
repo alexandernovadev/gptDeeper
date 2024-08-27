@@ -34,7 +34,7 @@ export const TextMessageBoxSelect = ({
   return (
     <form
       onSubmit={handleSendMessage}
-      className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4"
+      className="flex flex-row items-center h-16 rounded-xl bg-transparent w-full px-4"
     >
       <div className="flex-grow">
         <div className="flex">
@@ -42,7 +42,7 @@ export const TextMessageBoxSelect = ({
             type="text"
             autoFocus
             name="message"
-            className="w-full border rounded-xl text-gray-800 focus:outline-none focus:border-indigo-300 pl-4 h-10"
+            className="w-full border rounded-xl bg-transparent text-gray-800 focus:outline-none focus:border-indigo-300 pl-4 h-10"
             placeholder={placeholder}
             autoComplete={disableCorrections ? "on" : "off"}
             autoCorrect={disableCorrections ? "on" : "off"}
@@ -53,7 +53,7 @@ export const TextMessageBoxSelect = ({
 
           <select
             name="select"
-            className="w-2/5 ml-5 border rounded-xl text-gray-800 focus:outline-none focus:border-indigo-300 pl-4 h-10"
+            className="w-2/5 ml-5 border rounded-xl bg-transparent text-gray-200 focus:outline-none focus:border-indigo-300 pl-4 h-10"
             value={selectedOption}
             onChange={(e) => setSelectedOption(e.target.value)}
           >

@@ -12,7 +12,7 @@ export const imageGenerationUseCase = async (
 ): Promise<GeneratedImage> => {
   try {
     const resp = await fetch(
-      `${import.meta.env.VITE_GPT_API}/image-generation`,
+      `${import.meta.env.VITE_GPT_API}/gpt/image-generation`,
       {
         method: "POST",
         headers: {

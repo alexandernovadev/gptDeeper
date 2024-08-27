@@ -10,7 +10,7 @@ export const imageVariationUseCase = async (
 ): Promise<GeneratedImage> => {
   try {
     const resp = await fetch(
-      `${import.meta.env.VITE_GPT_API}/image-variation`,
+      `${import.meta.env.VITE_GPT_API}/gpt/image-variation`,
       {
         method: "POST",
         headers: {
