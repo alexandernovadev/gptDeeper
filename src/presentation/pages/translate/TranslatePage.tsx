@@ -1,6 +1,11 @@
 import { useState } from "react";
-import { GptMessage, MyMessage, TypingLoader, TextMessageBoxSelect } from '../../components';
-import { translateTextUseCase } from '../../../core/use-cases';
+import {
+  GptMessage,
+  MyMessage,
+  TypingLoader,
+  TextMessageBoxSelect,
+} from "../../components";
+import { translateTextUseCase } from "../../../core/use-cases";
 
 interface Message {
   text: string;
@@ -27,12 +32,12 @@ export const TranslatePage = () => {
   const handlePost = async (text: string, selectedOption: string) => {
     setIsLoading(true);
 
-    const newMessage = `Traduce: "${ text }" al idioma ${ selectedOption }`
+    const newMessage = `Traduce: "${text}" al idioma ${selectedOption}`;
     setMessages((prev) => [...prev, { text: newMessage, isGpt: false }]);
 
-    const { ok, message } = await translateTextUseCase( text, selectedOption )
+    const { ok, message } = await translateTextUseCase(text, selectedOption);
     setIsLoading(false);
-    if ( !ok ) {
+    if (!ok) {
       return alert(message);
     }
 
@@ -48,7 +53,7 @@ export const TranslatePage = () => {
 
           {messages.map((message, index) =>
             message.isGpt ? (
-              <GptMessage key={index} text={ message.text } />
+              <GptMessage key={index} text={message.text} />
             ) : (
               <MyMessage key={index} text={message.text} />
             )
@@ -65,7 +70,7 @@ export const TranslatePage = () => {
       <TextMessageBoxSelect
         onSendMessage={handlePost}
         placeholder="Escribe aquí lo que deseas"
-        options={ languages }
+        options={languages}
       />
     </div>
   );

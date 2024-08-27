@@ -7,7 +7,10 @@ import {
   GptMessageImage,
   GptMessageSelectableImage,
 } from "../../components";
-import { imageGenerationUseCase, imageVariationUseCase } from "../../../core/use-cases";
+import {
+  imageGenerationUseCase,
+  imageVariationUseCase,
+} from "../../../core/use-cases";
 
 interface Message {
   text: string;
@@ -23,43 +26,39 @@ export const ImageTunningPage = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       isGpt: true,
-      text: 'Imagen base',
+      text: "Imagen base",
       info: {
-        alt: 'Imagen base',
-        imageUrl: 'http://localhost:3000/gpt/image-generation/1703785193790.png'
-      }
-    }
+        alt: "Imagen base",
+        imageUrl:
+          "http://localhost:3000/gpt/image-generation/1703785193790.png",
+      },
+    },
   ]);
 
   const [originalImageAndMask, setOriginalImageAndMask] = useState({
-    original: undefined as
-      | string
-      | undefined,
+    original: undefined as string | undefined,
     mask: undefined as string | undefined,
   });
 
-
-  const handleVariation = async() => {
+  const handleVariation = async () => {
     setIsLoading(true);
-    const resp = await imageVariationUseCase( originalImageAndMask.original! );
+    const resp = await imageVariationUseCase(originalImageAndMask.original!);
     setIsLoading(false);
 
-    if ( !resp )return;
+    if (!resp) return;
 
-    setMessages( (prev) => [
+    setMessages((prev) => [
       ...prev,
       {
-        text: 'Variación',
+        text: "Variación",
         isGpt: true,
         info: {
           imageUrl: resp.url,
-          alt: resp.alt
-        }
-      }
-    ])
-
-  }
-
+          alt: resp.alt,
+        },
+      },
+    ]);
+  };
 
   const handlePost = async (text: string) => {
     setIsLoading(true);
@@ -67,8 +66,7 @@ export const ImageTunningPage = () => {
 
     const { original, mask } = originalImageAndMask;
 
-
-    const imageInfo = await imageGenerationUseCase(text, original, mask );
+    const imageInfo = await imageGenerationUseCase(text, original, mask);
     setIsLoading(false);
 
     if (!imageInfo) {
@@ -93,20 +91,19 @@ export const ImageTunningPage = () => {
 
   return (
     <>
-      {
-        originalImageAndMask.original && (
-          <div className="fixed flex flex-col items-center top-10 right-10 z-10 fade-in">
-            <span>Editando</span>
-            <img 
-              className="border rounded-xl w-36 h-36 object-contain"
-              src={ originalImageAndMask.mask ?? originalImageAndMask.original } 
-              alt="Imagen original"
-            />
-            <button onClick={ handleVariation } className="btn-primary mt-2">Generar variación</button>
-          </div>
-        )
-      }
-
+      {originalImageAndMask.original && (
+        <div className="fixed flex flex-col items-center top-10 right-10 z-10 fade-in">
+          <span>Editando</span>
+          <img
+            className="border rounded-xl w-36 h-36 object-contain"
+            src={originalImageAndMask.mask ?? originalImageAndMask.original}
+            alt="Imagen original"
+          />
+          <button onClick={handleVariation} className="btn-primary mt-2">
+            Generar variación
+          </button>
+        </div>
+      )}
 
       <div className="chat-container">
         <div className="chat-messages">
@@ -122,10 +119,12 @@ export const ImageTunningPage = () => {
                   text={message.text}
                   imageUrl={message.info?.imageUrl!}
                   alt={message.info?.alt!}
-                  onImageSelected={ (maskImageUrl) => setOriginalImageAndMask({
-                    original: message.info?.imageUrl!,
-                    mask: maskImageUrl
-                  }) }
+                  onImageSelected={(maskImageUrl) =>
+                    setOriginalImageAndMask({
+                      original: message.info?.imageUrl!,
+                      mask: maskImageUrl,
+                    })
+                  }
                 />
               ) : (
                 <MyMessage key={index} text={message.text} />

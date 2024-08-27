@@ -6,7 +6,7 @@ import {
   TextMessageBox,
   GptMessageImage,
 } from "../../components";
-import { imageGenerationUseCase } from '../../../core/use-cases';
+import { imageGenerationUseCase } from "../../../core/use-cases";
 
 interface Message {
   text: string;
@@ -14,7 +14,7 @@ interface Message {
   info?: {
     imageUrl: string;
     alt: string;
-  }
+  };
 }
 
 export const ImageGenerationPage = () => {
@@ -25,26 +25,27 @@ export const ImageGenerationPage = () => {
     setIsLoading(true);
     setMessages((prev) => [...prev, { text: text, isGpt: false }]);
 
-    const imageInfo = await imageGenerationUseCase( text );
+    const imageInfo = await imageGenerationUseCase(text);
     setIsLoading(false);
 
-    if ( !imageInfo ) {
-      return setMessages( (prev) => [ ...prev, { text: 'No se pudo generar la imagen', isGpt: true } ] );
+    if (!imageInfo) {
+      return setMessages((prev) => [
+        ...prev,
+        { text: "No se pudo generar la imagen", isGpt: true },
+      ]);
     }
 
-    setMessages( prev => [
+    setMessages((prev) => [
       ...prev,
       {
         text: text,
         isGpt: true,
         info: {
           imageUrl: imageInfo.url,
-          alt: imageInfo.alt
-        }
-      }
-    ])
-
-    
+          alt: imageInfo.alt,
+        },
+      },
+    ]);
   };
 
   return (
@@ -56,11 +57,11 @@ export const ImageGenerationPage = () => {
 
           {messages.map((message, index) =>
             message.isGpt ? (
-              <GptMessageImage 
-                key={index} 
-                text={ message.text }
-                imageUrl={ message.info?.imageUrl! }
-                alt={ message.info?.alt! }
+              <GptMessageImage
+                key={index}
+                text={message.text}
+                imageUrl={message.info?.imageUrl!}
+                alt={message.info?.alt!}
               />
             ) : (
               <MyMessage key={index} text={message.text} />

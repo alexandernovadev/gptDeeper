@@ -1,36 +1,28 @@
-import { TranslateResponse } from '../../interfaces';
+import { TranslateResponse } from "../../interfaces";
 
-
-
-export const translateTextUseCase = async( prompt: string, lang: string ) => {
-  
+export const translateTextUseCase = async (prompt: string, lang: string) => {
   try {
-    
-    const resp = await fetch(`${ import.meta.env.VITE_GPT_API }/translate`, {
-      method: 'POST',
+    const resp = await fetch(`${import.meta.env.VITE_GPT_API}/translate`, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ prompt, lang })
+      body: JSON.stringify({ prompt, lang }),
     });
 
-    if ( !resp.ok ) throw new Error('No se pudo realizar la traducción');
+    if (!resp.ok) throw new Error("No se pudo realizar la traducción");
 
-    const { message } = await resp.json() as TranslateResponse;
-    
-    return  {
+    const { message } = (await resp.json()) as TranslateResponse;
+
+    return {
       ok: true,
-      message: message
-    }
-
-
+      message: message,
+    };
   } catch (error) {
     console.log(error);
     return {
       ok: false,
-      message: 'No se pudo traducir'
-    }
+      message: "No se pudo traducir",
+    };
   }
-
-
-}
+};

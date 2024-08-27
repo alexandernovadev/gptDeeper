@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink } from "react-router-dom";
 
 interface Props {
   to: string;
@@ -7,10 +7,7 @@ interface Props {
   description: string;
 }
 
-
-export const SidebarMenuItem = ({
-  to, icon, title, description
-}:Props) => {
+export const SidebarMenuItem = ({ to, icon, title, description }: Props) => {
   return (
     <NavLink
       to={to}
