@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { examGenerateUseCase } from "../../../core/use-cases/exam-generator/exam-generate.use-case";
+import { ExamPreview } from "../../components/exampreviwer/ExamPreview";
 
 interface ExamRequestData {
   topic: string;
@@ -20,6 +21,8 @@ export const ExamGeneratorPage = () => {
 
   const [result, setResult] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isEndedStream, setIsEndedStream] = useState<boolean>(false);
   const abortController = useRef(new AbortController());
 
   const handleChange = (
@@ -51,6 +54,8 @@ export const ExamGeneratorPage = () => {
     } catch (error) {
       setResult("Error generating the exam. Please try again.");
       setIsLoading(false);
+    } finally {
+      setIsEndedStream(true);
     }
   };
 
@@ -59,9 +64,17 @@ export const ExamGeneratorPage = () => {
     setIsLoading(false);
   };
 
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="flex flex-col p-1 min-h-screen overflow-auto pb-20">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
           Exam Generator
         </h1>
@@ -90,10 +103,10 @@ export const ExamGeneratorPage = () => {
         </button>
       </div>
 
-      <div className="w-full bg-transparent rounded-lg shadow mb-6">
-        <div className="mb-4">
+      <div className="w-full bg-transparent rounded-lg shadow mb-2">
+        <div className="mb-1">
           <label
-            className="block text-zinc-700 dark:text-zinc-300 mb-2"
+            className="block text-zinc-700 dark:text-zinc-300 mb-1"
             htmlFor="topic"
           >
             Topic
@@ -108,10 +121,10 @@ export const ExamGeneratorPage = () => {
           />
         </div>
 
-        <div className="flex space-x-4 mb-4">
+        <div className="flex space-x-4 mb-2">
           <div className="flex-1">
             <label
-              className="block text-zinc-700 dark:text-zinc-300 mb-2"
+              className="block text-zinc-700 dark:text-zinc-300 mb-1"
               htmlFor="grammar"
             >
               Grammar
@@ -127,7 +140,7 @@ export const ExamGeneratorPage = () => {
           </div>
           <div className="flex-shrink-0">
             <label
-              className="block text-zinc-700 dark:text-zinc-300 mb-2"
+              className="block text-zinc-700 dark:text-zinc-300 mb-1"
               htmlFor="difficulty"
             >
               Difficulty
@@ -147,7 +160,7 @@ export const ExamGeneratorPage = () => {
 
           <div className="flex-shrink-0">
             <label
-              className="block text-zinc-700 dark:text-zinc-300 mb-2"
+              className="block text-zinc-700 dark:text-zinc-300 mb-1"
               htmlFor="level"
             >
               Level
@@ -170,7 +183,7 @@ export const ExamGeneratorPage = () => {
 
           <div className="flex-shrink-0">
             <label
-              className="block text-zinc-700 dark:text-zinc-300 mb-2"
+              className="block text-zinc-700 dark:text-zinc-300 mb-1"
               htmlFor="ammountQuestions"
             >
               Amount
@@ -188,13 +201,42 @@ export const ExamGeneratorPage = () => {
       </div>
 
       <div className="w-full rounded-lg shadow p-2 pb-20">
-        <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-4">
-          Result
-        </h2>
+        <div className="flex justify-between items-center pb-2">
+          <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
+            JSON Exam
+          </h2>
+          {result && isEndedStream && (
+            <button
+              onClick={handleModalOpen}
+              className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-1 px-4 rounded-lg shadow"
+            >
+              Preview Exam
+            </button>
+          )}
+        </div>
         <div className="w-full h-full p-2 border rounded dark:bg-zinc-800 dark:text-zinc-300 overflow-y-auto whitespace-pre-wrap">
           {result}
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-lg p-4 max-w-xl w-full h-[95vh] overflow-auto">
+            <button
+              onClick={handleModalClose}
+              className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded-full"
+            >
+              Close
+            </button>
+            <ExamPreview
+              title={
+                "The Enchanting World of Feline Love: Present Simple Mastery"
+              }
+              questions={JSON.parse(result).questions}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

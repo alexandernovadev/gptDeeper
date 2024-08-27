@@ -1,5 +1,3 @@
-import { ExamResponse } from "../../../interfaces";
-
 interface ExamRequestData {
   topic: string;
   grammar: string;
